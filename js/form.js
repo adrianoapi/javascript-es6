@@ -9,13 +9,19 @@ adicionar.addEventListener('click', function(){
   var paciente = obtemPacienteDoFormulario(form);
 
   var pacienteTr = montaTr(paciente);
+  var errors = validaPaciente(paciente);
 
-
+  if(errors.length > 0){
+    showMsgError(errors);
+    return;
+  }
 
   var tabela = document.querySelector("#tabela-pacientes");
   tabela.appendChild(pacienteTr);
 
   form.reset();
+  var ul = document.querySelector("#msg-error");
+  ul.innerHTML = "";
 
 });
 
@@ -59,4 +65,29 @@ function montaTd(data, _class) {
   td.textContent = data;
   td.classList.add(_class);
   return td;
+}
+
+function validaPaciente(paciente) {
+
+  var errors = [];
+
+  if(!validaPeso(paciente.peso    ) ) errors.push("Peso inválido!");
+  if(!validaAltura(paciente.altura) ) errors.push("Altura inválida!");
+  if(paciente.nome.length    == 0   ) errors.push("Preencha o campo nome!");
+  if(paciente.gordura.length == 0   ) errors.push("Preencha o campo gordura!");
+  if(paciente.peso.length    == 0   ) errors.push("Preencha o campo peso!");
+  if(paciente.altura.length  == 0   ) errors.push("Preencha o campo altura!");
+
+  return errors;
+
+}
+
+function showMsgError(error) {
+  var ul = document.querySelector("#msg-error");
+  ul.innerHTML = "";
+  error.forEach(function(erro){
+    var li = document.createElement("li");
+    li.textContent = erro;
+    ul.appendChild(li);
+  });
 }
